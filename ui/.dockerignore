@@ -1,0 +1,11 @@
+__pycache__/
+*.pyc
+.venv/
+venv/
+.env
+store/incidents.db
+store/chroma_db/
+.git/
+.gitignore
+*.md
+!README.md
