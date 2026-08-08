@@ -1,10 +1,7 @@
-// Add this to your frontend's next.config.js so the app works correctly
-// when served under adityakashyap.work/legalRag instead of a domain root.
-// This makes Next.js prefix all internal routes and asset URLs
-// (/_next/static/..., etc.) with /legalRag automatically.
 
 /** @type {import('next').NextConfig} */
 const nextConfig = {
+  trailingSlash: true,
   basePath: "/legalRag",
   // Optional but recommended: if any <img> tags reference assets by
   // absolute path, this keeps those consistent too.
@@ -12,7 +9,6 @@ const nextConfig = {
 };
 
 module.exports = nextConfig;
-
 // Also update wherever your frontend calls the backend API - point it at
 // the public HTTPS URL directly (see .env.production.example), e.g.:
 //   fetch(`${process.env.NEXT_PUBLIC_API_URL}/query`, ...)

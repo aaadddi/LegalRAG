@@ -1,15 +1,14 @@
-version: "3.8"
-
 services:
   backend:
     build: .
     env_file: .env
     volumes:
       # Persist SQLite + Chroma data across container restarts/redeploys.
-      - ./store_data:/app/store
       # Persist API-created report markdown files too (see api/main.py
       # create_report, which writes into data/).
       - ./data:/app/data
+      - ./store_data/incidents.db:/app/store/incidents.db
+      - ./store_data/chroma_db:/app/store/chroma_db
     restart: unless-stopped
     expose:
       - "8000"
@@ -18,9 +17,9 @@ services:
     # Point this at your Next.js project directory - adjust the path
     # if it lives outside this repo.
     build:
-      context: ../legal-rag-frontend
+      context: ./ui
       dockerfile: Dockerfile
-    env_file: ../legal-rag-frontend/.env.production
+    env_file: ./.env
     restart: unless-stopped
     expose:
       - "3000"
