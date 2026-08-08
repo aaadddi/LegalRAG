@@ -19,6 +19,13 @@ services:
     build:
       context: ./ui
       dockerfile: Dockerfile
+      args:
+        # Must be a build arg, not just env_file below - Next.js inlines
+        # NEXT_PUBLIC_ vars into the client bundle at build time, before
+        # the container (and its env_file) ever starts. Sourced from the
+        # root .env file (docker compose auto-loads it for ${...}
+        # substitution here).
+        NEXT_PUBLIC_API_URL: ${NEXT_PUBLIC_API_URL}
     env_file: ./.env
     restart: unless-stopped
     expose:

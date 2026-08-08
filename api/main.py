@@ -14,6 +14,7 @@ Endpoints:
     DELETE /reports/{report_id}  - delete a report
     GET  /health                 - basic liveness check
 """
+import os
 import sys
 from pathlib import Path
 
@@ -35,11 +36,21 @@ DATA_DIR = Path(__file__).resolve().parent.parent / "data"
 
 app = FastAPI(title="Legal Incident RAG API", version="0.1.0")
 
-# Wide open for local dev / Streamlit on a different port. Tighten this
-# before deploying anywhere public - restrict to your actual frontend origin.
+# Comma-separated allowlist of origins, e.g.
+# "https://app.adityakashyap.work,http://localhost:3000". Falls back to
+# localhost dev origins only - never defaults to "*" in production, since
+# nginx already serves the frontend and API from the same origin (no CORS
+# needed there) and a wildcard would only expose the API to any site.
+_default_origins = "http://localhost:3000,http://127.0.0.1:3000"
+CORS_ORIGINS = [
+    origin.strip()
+    for origin in os.getenv("CORS_ORIGINS", _default_origins).split(",")
+    if origin.strip()
+]
+
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["*"],
+    allow_origins=CORS_ORIGINS,
     allow_methods=["*"],
     allow_headers=["*"],
 )

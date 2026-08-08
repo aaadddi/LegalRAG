@@ -1,0 +1,16 @@
+.git
+venv
+__pycache__
+*.pyc
+.pytest_cache
+
+# frontend has its own build - not needed in the backend image
+ui/node_modules
+ui/.next
+
+# persisted data is host-mounted at runtime (see docker-compose.yml) -
+# don't bake stale copies into the image
+store_data
+
+.env
+.env.local

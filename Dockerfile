@@ -16,6 +16,7 @@ RUN pip install --no-cache-dir -r requirements.txt
 RUN python -m spacy download en_core_web_sm
 
 COPY . .
+RUN chmod +x entrypoint.sh
 
 # store/ is where SQLite + Chroma persist data - mount this as a volume
 # in production so data survives container restarts/redeploys.
@@ -27,4 +28,5 @@ EXPOSE 8000
 HEALTHCHECK --interval=30s --timeout=5s --start-period=10s \
     CMD curl -f http://localhost:8000/health || exit 1
 
-CMD ["uvicorn", "api.main:app", "--host", "0.0.0.0", "--port", "8000"]
+# Ingests any new reports in data/ before serving - see entrypoint.sh.
+CMD ["./entrypoint.sh"]
